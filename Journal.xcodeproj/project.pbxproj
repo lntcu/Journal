@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CEB6555D2E2913B3006889E4 /* JournalIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = CEB6555C2E2913B3006889E4 /* JournalIcon.icon */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		CEB3C0422E289F30001165A7 /* Journal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Journal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEB6554B2E290345006889E4 /* Journal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Journal.app; path = "/Users/user/Areas/Developer/Swift/Journal/build/Debug-iphoneos/Journal.app"; sourceTree = "<absolute>"; };
+		CEB6555C2E2913B3006889E4 /* JournalIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = JournalIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,17 +37,9 @@
 		CEB3C0392E289F30001165A7 = {
 			isa = PBXGroup;
 			children = (
+				CEB6555C2E2913B3006889E4 /* JournalIcon.icon */,
 				CEB3C0442E289F30001165A7 /* Journal */,
-				CEB3C0432E289F30001165A7 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		CEB3C0432E289F30001165A7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				CEB3C0422E289F30001165A7 /* Journal.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -67,7 +64,7 @@
 			packageProductDependencies = (
 			);
 			productName = Journal;
-			productReference = CEB3C0422E289F30001165A7 /* Journal.app */;
+			productReference = CEB6554B2E290345006889E4 /* Journal.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -95,7 +92,7 @@
 			mainGroup = CEB3C0392E289F30001165A7;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = CEB3C0432E289F30001165A7 /* Products */;
+			productRefGroup = CEB3C0392E289F30001165A7;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -109,6 +106,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEB6555D2E2913B3006889E4 /* JournalIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,8 +245,9 @@
 		CEB3C04E2E289F31001165A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = JournalIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -277,8 +276,9 @@
 		CEB3C04F2E289F31001165A7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = JournalIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
