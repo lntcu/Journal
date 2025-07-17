@@ -8,17 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		CEB6555D2E2913B3006889E4 /* JournalIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = CEB6555C2E2913B3006889E4 /* JournalIcon.icon */; };
+		CEB6555F2E291619006889E4 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = CEB6555E2E291614006889E4 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		CEB6554B2E290345006889E4 /* Journal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Journal.app; path = "/Users/user/Areas/Developer/Swift/Journal/build/Debug-iphoneos/Journal.app"; sourceTree = "<absolute>"; };
 		CEB6555C2E2913B3006889E4 /* JournalIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = JournalIcon.icon; sourceTree = "<group>"; };
+		CEB6555E2E291614006889E4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CEB3C0442E289F30001165A7 /* Journal */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Journal;
+			sourceTree = "<group>";
+		};
+		CEB6556C2E2918A1006889E4 /* Screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Screenshots;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +46,8 @@
 			children = (
 				CEB6555C2E2913B3006889E4 /* JournalIcon.icon */,
 				CEB3C0442E289F30001165A7 /* Journal */,
+				CEB6555E2E291614006889E4 /* README.md */,
+				CEB6556C2E2918A1006889E4 /* Screenshots */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,6 +68,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				CEB3C0442E289F30001165A7 /* Journal */,
+				CEB6556C2E2918A1006889E4 /* Screenshots */,
 			);
 			name = Journal;
 			packageProductDependencies = (
@@ -117,6 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEB6555F2E291619006889E4 /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
