@@ -5,10 +5,10 @@ Journal is a iPhone app that uses Apple's on device LLMs to help users with refl
 
 Also to test designing animations.
 
-| Application Screenshots | Application Screenshots | Application Screenshots |
-| ----------------------- | ----------------------- | ----------------------- |
-| ![[Screenshot 1.png]]   | ![[Screenshot 2.png]]   | ![[Screenshot 3.png]]   |
-| ![[Screenshot 4.png]]   | ![[Screenshot 5.png]]   | ![[Screenshot 6.png]]   |
+| Application Screenshots          | Application Screenshots          | Application Screenshots          |
+| -------------------------------- | -------------------------------- | -------------------------------- |
+| ![Screenshot](Screenshot 1.png]) | ![Screenshot](Screenshot 1.png]) | ![Screenshot](Screenshot 3.png]) |
+| ![Screenshot](Screenshot 4.png]) | ![Screenshot](Screenshot 5.png]) | ![Screenshot](Screenshot 6.png]) |
 
 ## Features
 
@@ -23,5 +23,3 @@ Also to test designing animations.
 | Home View      | Most likely analytics such as streaks, average positivity and reflection prompt | In Progress |
 | Poem Selection | Add other poem types other than haiku such as free verse, lyric poetry.         | Not Started |
 
-# Example Usage
-![[Recording 1.mov]]
