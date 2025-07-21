@@ -9,125 +9,89 @@ import SwiftUI
 import SwiftData
 import FoundationModels
 
-@MainActor
-@Observable
-class Generator {
-    let session: LanguageModelSession
-    private(set) var response: [String].PartiallyGenerated?
-    init() {
-        self.session = LanguageModelSession() {
-            "Generate a haiku based on the prompt. Try to include parts of the prompt in the haiku. Output only the haiku and nothing else."
-        }
-    }
-    func generate(text: String) async throws {
-        self.response = nil
-        let prompt = "Generate a haiku based on this text: \(text)"
-        let stream = session.streamResponse(to: prompt, generating: [String].self)
-        for try await partial in stream {
-            withAnimation {
-                self.response = partial
-            }
-        }
-    }
-}
-
-@MainActor
-@Observable
-class Inspiration {
-    let session: LanguageModelSession
-    private(set) var response: String.PartiallyGenerated?
-    init() {
-        self.session = LanguageModelSession() {
-            "Generate a inspirational question to prompt the reader to reflect on their day. Make the question short and to the point. Output only the question and nothing else."
-        }
-    }
-    func generate() async throws {
-        self.response = nil
-        let prompt = "Generate a inspiration question."
-        let stream = session.streamResponse(to: prompt, generating: String.self)
-        for try await partial in stream {
-            withAnimation {
-                self.response = partial
-            }
-        }
-    }
-}
-
 struct WriteView: View {
     @State private var thought: String = ""
-    @State private var path = [Entry]()
     @Environment(\.modelContext) var modelContext
-    @State private var generator: Generator? = nil
+    @Query var entries: [Entry]
+    @State private var poet: Poet? = nil
     @State private var inspiration: Inspiration? = nil
     @State private var generating: Bool = false
-    var scorer = Scorer()
+    @State private var format: String = "Haiku"
+    var prompt: String
+    let formats = ["Haiku", "Sonnet", "Cinquain", "Epigram", "Limerick", "Ekphrastic", "Couplet", "Free Verse", "Lyric"]
     
     var body: some View {
         ZStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                if path.isEmpty {
-                    VStack {
-                        Spacer()
-                        HStack {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    if entries.isEmpty {
+                        VStack {
                             Spacer()
-                            Text("How's your day coming along?")
-                                .font(.title)
-                                .fontWeight(.medium)
-                                .multilineTextAlignment(.center)
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                    .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
-                }
-                else {
-                    List {
-                        ForEach(path) { entry in
                             HStack {
-                                VStack(alignment: .leading) {
-                                    ForEach(entry.text, id: \.self) { line in
-                                        Text(line)
-                                            .font(.title2)
-                                            .fontWeight(.medium)
-                                            .transition(.blurReplace.combined(with: .opacity))
-                                            .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
-                                    }
-                                    Text("Positiveness: \(entry.score, specifier: "%.1f")")
-                                        .foregroundStyle(.secondary)
-                                }
+                                Spacer()
+                                Text(prompt)
+                                    .font(.title)
+                                    .fontWeight(.medium)
+                                    .multilineTextAlignment(.center)
                                 Spacer()
                             }
-                            .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                            Spacer()
                         }
-                        .onDelete(perform: delete)
+                        .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
                     }
-                    .listStyle(.plain)
+                    else {
+                        VStack(alignment: .leading, spacing: 20) {
+                            ForEach(entries) { item in
+                                HStack {
+                                    ForEach(item.text.components(separatedBy: "_b"), id: \.self) { para in
+                                        VStack(alignment: .leading) {
+                                            ForEach(para.components(separatedBy: "_n"), id: \.self) { line in
+                                                Text(line)
+                                                    .font(.title2)
+                                                    .fontWeight(.medium)
+                                                    .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                                            }
+                                        }
+                                    }
+                                    .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                                    Spacer()
+                                }
+                                .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                            }
+                            .onDelete(perform: delete)
+                        }
+                    }
                 }
+                .padding(.bottom, 80)
             }
             .padding()
-            .padding(.bottom, 50)
-            VStack {
+            VStack(spacing: 5) {
                 Spacer()
                 if generating {
-                    VStack(spacing: 5) {
+                    VStack(alignment: .leading, spacing: 5) {
                         HStack {
-                            let text: [String] = {
+                            let text: String = {
                                 withAnimation {
-                                    if let partial = generator?.response {
+                                    if let partial = poet?.response {
                                         return partial
                                     } else {
-                                        return ["Writing a haiku ..."]
+                                        return "Writing a \(format) ..."
                                     }
                                 }
                             }()
-                            VStack(alignment: .leading) {
-                                ForEach(text, id: \.self) { line in
-                                    Text(line)
-                                        .font(.title2)
-                                        .fontWeight(.medium)
-                                        .transition(.opacity.combined(with: .blurReplace))
+                            VStack(alignment: .leading, spacing: 20) {
+                                ForEach(text.components(separatedBy: "_b"), id: \.self) { para in
+                                    VStack(alignment: .leading) {
+                                        ForEach(para.components(separatedBy: "_n"), id: \.self) { line in
+                                            Text(line)
+                                                .font(.title2)
+                                                .fontWeight(.medium)
+                                        }
+                                        .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                                    }
                                 }
                             }
+                            .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
                             Spacer()
                         }
                         HStack {
@@ -136,13 +100,21 @@ struct WriteView: View {
                             }
                             .buttonStyle(GlassButtonStyle())
                             .glassEffect()
-                            Button(action: save) {
-                                Label("Save", systemImage: "checkmark")
-                            }
-                            .disabled(generator?.session.isResponding ?? false)
+                            .disabled(poet?.session.isResponding ?? false)
                             .buttonStyle(GlassButtonStyle())
                             .glassEffect()
+                            Picker("Poem Format", selection: $format) {
+                                ForEach(formats, id: \.self) {
+                                    Text($0)
+                                }
+                            }
+                            .glassEffect()
+                            .buttonStyle(GlassButtonStyle())
                             Spacer()
+                            Button(action: save) {
+                                Label("Save", systemImage: "checkmark")
+                                    .labelStyle(.iconOnly)
+                            }
                         }
                     }
                     .padding()
@@ -150,22 +122,24 @@ struct WriteView: View {
                     .padding(.horizontal)
                     .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
                 }
-                if inspiration != nil && !generating {
+                if (inspiration != nil || prompt != "How's your day coming along?") && !generating {
                     VStack(spacing: 5) {
                         HStack {
                             let text: String = {
                                 withAnimation {
                                     if let partial = inspiration?.response {
                                         return String(describing: partial)
-                                    } else {
+                                    } else if inspiration != nil {
                                         return "Finding inspiration ..."
+                                    } else {
+                                        return prompt
                                     }
                                 }
                             }()
                             Text(text)
                                 .font(.title2)
                                 .fontWeight(.medium)
-                                .transition(.opacity.combined(with: .blurReplace))
+                                .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
                             Spacer()
                         }
                         HStack {
@@ -188,17 +162,26 @@ struct WriteView: View {
                     .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
                 }
                 VStack(spacing: 5) {
-                    if thought == "" && inspiration == nil {
-                        HStack {
+                    HStack(spacing: 5) {
+                        if inspiration == nil && !generating {
                             Button(action: inspire) {
                                 Label("Reflection Guide", systemImage: "sparkles")
                             }
                             .glassEffect()
                             .buttonStyle(GlassButtonStyle())
-                            Spacer()
+                            .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
                         }
-                        .padding(.horizontal)
-                        .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                        if !generating {
+                            Picker("Poem Format", selection: $format) {
+                                ForEach(formats, id: \.self) {
+                                    Text($0)
+                                }
+                            }
+                            .glassEffect()
+                            .buttonStyle(GlassButtonStyle())
+                            .transition(.opacity.combined(with: .blurReplace).combined(with: .move(edge: .bottom)))
+                        }
+                        Spacer()
                     }
                     HStack(alignment: .bottom, spacing: 5) {
                         TextField("What's on your mind?", text: $thought, axis: .vertical)
@@ -209,10 +192,10 @@ struct WriteView: View {
                             .padding(.vertical, 7)
                             .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 30))
                             .onSubmit { generate() }
-                            .disabled(generator?.session.isResponding ?? false)
+                            .disabled(poet?.session.isResponding ?? false)
                         Button(action: generate) {
-                            Label("Save", systemImage: "return")
-                                .font(.title2)
+                            Label("Send", systemImage: "paperplane")
+                                .font(.title3)
                                 .padding(.horizontal, 3)
                                 .padding(.vertical, 3)
                         }
@@ -220,22 +203,25 @@ struct WriteView: View {
                         .buttonStyle(GlassButtonStyle())
                         .labelStyle(.iconOnly)
                     }
-                    .padding(.horizontal)
                 }
+                .padding(.horizontal)
             }
         }
     }
     
     func save() {
-        let text = generator?.response
-        let score = scorer.score(text?.joined(separator: "; ") ?? "")
-        let newEntry = Entry(
-            text: text ?? ["Error"],
-            score: score
-        )
+        guard let text = poet?.response else {
+            print("No text generated to save.")
+            return
+        }
+        let newEntry = Entry(text: poet?.response ?? "Error")
         withAnimation {
             modelContext.insert(newEntry)
-            path.append(newEntry)
+            do {
+                try modelContext.save()
+            } catch {
+                print("Failed to save text.")
+            }
             thought = ""
             generating = false
         }
@@ -243,22 +229,22 @@ struct WriteView: View {
     
     func delete(_ indexSet: IndexSet) {
         for index in indexSet {
-            let entry = path[index]
-            modelContext.delete(entry)
+            let item = entries[index]
+            modelContext.delete(item)
         }
     }
     
     func generate() {
-        if generator == nil {
+        if poet == nil {
             withAnimation {
-                generator = Generator()
+                poet = Poet()
             }
         }
         Task {
             withAnimation {
                 generating = true
             }
-            try await generator?.generate(text: thought)
+            try await poet?.generate(text: thought, format: format)
         }
     }
     
@@ -275,5 +261,5 @@ struct WriteView: View {
 }
 
 #Preview {
-    WriteView()
+    WriteView(prompt: "How's your day coming along?")
 }

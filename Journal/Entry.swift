@@ -9,14 +9,10 @@ import Foundation
 import SwiftData
 
 @Model
-class Entry: Identifiable {
-    var id: UUID
-    var text: [String]
-    var score: Double
+class Entry {
+    var text: String
     
-    init(text: [String], score: Double) {
-        self.id = UUID()
+    init(text: String) {
         self.text = text
-        self.score = score
     }
 }
